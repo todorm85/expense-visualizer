@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace ExpenseTracker.Web
+namespace ExpenseTracker
 {
     public class Program
     {
@@ -19,7 +19,7 @@ namespace ExpenseTracker.Web
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseWebRoot("web/wwwroot")
+                .UseWebRoot("web/wwwroot/")
                 .UseStartup<Startup>()
                 .Build();
     }
