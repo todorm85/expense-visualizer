@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="web/wwwroot/" />
+    <Folder Include="web/webapp/dist" />
   </ItemGroup>
 
   <ItemGroup>

@@ -19,7 +19,7 @@ namespace ExpenseTracker
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseWebRoot("web/wwwroot/")
+                .UseWebRoot("web/webapp/dist")
                 .UseStartup<Startup>()
                 .Build();
     }
