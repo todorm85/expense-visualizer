@@ -1,0 +1,2 @@
+graph that shows expenses by tag and date (months or days ib given month)
+filter by date time span

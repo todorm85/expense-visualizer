@@ -7,11 +7,11 @@ namespace ExpenseTracker.Core
 {
     public class AllianzDataSource
     {
-        private const string amountKeyName = "amount";
+        private const string AmountKeyName = "amount";
 
-        private const string datetimeKeyName = "datetime";
+        private const string DatetimeKeyName = "datetime";
 
-        private const string transactionTypeKeyName = "dtkt";
+        private const string TransactionTypeKeyName = "dtkt";
 
         private Tagger tagger;
 
@@ -41,19 +41,19 @@ namespace ExpenseTracker.Core
             var transaction = new Transaction();
             foreach (XmlAttribute attribute in xmlAttributes)
             {
-                if (attribute.Name == amountKeyName)
+                if (attribute.Name == AmountKeyName)
                 {
                     var style = NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands;
                     var culture = CultureInfo.InvariantCulture;
-                    transaction.Amount = Decimal.Parse(xmlAttributes[amountKeyName].Value, style, culture);
+                    transaction.Amount = Decimal.Parse(xmlAttributes[AmountKeyName].Value, style, culture);
                 }
-                else if (attribute.Name == datetimeKeyName)
+                else if (attribute.Name == DatetimeKeyName)
                 {
-                    transaction.Date = DateTime.ParseExact(xmlAttributes[datetimeKeyName].Value, "dd/MM/yyyy HH:mm:ss", null);
+                    transaction.Date = DateTime.ParseExact(xmlAttributes[DatetimeKeyName].Value, "dd/MM/yyyy HH:mm:ss", null);
                 }
-                else if (attribute.Name == transactionTypeKeyName)
+                else if (attribute.Name == TransactionTypeKeyName)
                 {
-                    transaction.TransactionType = this.ParseTransactionType(xmlAttributes[transactionTypeKeyName].Value);
+                    transaction.TransactionType = this.ParseTransactionType(xmlAttributes[TransactionTypeKeyName].Value);
                 }
                 else
                 {

@@ -1,9 +1,13 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <div *ngFor="let transaction of transactions$ | async">
-    {{ JSON.stringify(transaction) }}
+<div #canvasesContainer></div>
+<button (click)="showTransactionsDetailedView = !showTransactionsDetailedView">Toggle show details for untagged</button>
+<div *ngIf="showTransactionsDetailedView">
+  <div *ngFor="let transaction of transactionsForDetailedView" style="white-space: pre-wrap">
+    {{JSON.stringify(transaction.details)}}
+    {{ TransactionType[transaction.transactionType] }}
+    {{transaction.amount}}
+    {{transaction.date | date:"dd/MM/yy"}}
+    {{transaction.tags}}
+    <hr>
   </div>
-
+</div>
