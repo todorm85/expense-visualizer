@@ -4,15 +4,18 @@ import { TransactionsService } from '../app/transactions.service';
 import { HttpClientModule }    from '@angular/common/http';
 
 import { AppComponent } from './app.component';
+import { ChartComponent } from './chart/chart.component';
+import { TransactionsChartUtilsService } from './transactions-chart-utils.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ChartComponent
   ],
   imports: [
     BrowserModule, HttpClientModule
   ],
-  providers: [TransactionsService],
+  providers: [TransactionsService, TransactionsChartUtilsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,8 +1,11 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div #canvasesContainer></div>
 <button (click)="showTransactionsDetailedView = !showTransactionsDetailedView">Toggle show details for untagged</button>
-<div *ngIf="showTransactionsDetailedView">
-  <div *ngFor="let transaction of transactionsForDetailedView" style="white-space: pre-wrap">
+
+<div>
+  <app-chart *ngFor="let chart of charts" [chartOptions]="chart.chartOptions" [chartData]="chart.chartData"></app-chart>
+</div>
+
+<div *ngIf="showTransactionsDetailedView" id="transaction-details">
+  <div *ngFor="let transaction of transactionsForDetailedView">
     {{JSON.stringify(transaction.details)}}
     {{ TransactionType[transaction.transactionType] }}
     {{transaction.amount}}
