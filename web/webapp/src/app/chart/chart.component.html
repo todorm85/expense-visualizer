@@ -1,5 +1,7 @@
-<div style="max-width: 700px; max-height: 400px;">
-
+<div style="max-width: 700px; max-height: 400px;" class="canvasContainer">
   <canvas #canvas width="700" height="400"></canvas>
-  
+</div>
+<div *ngFor="let setWrapper of allSets" class="checkboxContainer">
+  <input type="checkbox" id="{{setWrapper.dataset.label}}" [(checked)]="setWrapper.enabled" (change)="onToggleSelect(setWrapper)">
+  <label for="{{setWrapper.dataset.label}}">{{setWrapper.dataset.label}}</label>
 </div>

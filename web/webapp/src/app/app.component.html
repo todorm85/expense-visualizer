@@ -1,16 +1,7 @@
-<button (click)="showTransactionsDetailedView = !showTransactionsDetailedView">Toggle show details for untagged</button>
-
-<div>
-  <app-chart *ngFor="let chart of charts" [chartOptions]="chart.chartOptions" [chartData]="chart.chartData"></app-chart>
-</div>
-
-<div *ngIf="showTransactionsDetailedView" id="transaction-details">
-  <div *ngFor="let transaction of transactionsForDetailedView">
-    {{JSON.stringify(transaction.details)}}
-    {{ TransactionType[transaction.transactionType] }}
-    {{transaction.amount}}
-    {{transaction.date | date:"dd/MM/yy"}}
-    {{transaction.tags}}
-    <hr>
-  </div>
-</div>
+<h1>{{title}}</h1>
+<nav>
+    <a routerLink="/chart-list">Charts</a>
+    <a routerLink="/transaction-list">Transactions</a>
+  </nav>
+  <hr>
+  <router-outlet></router-outlet>

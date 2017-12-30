@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import Chart from 'chart.js';
-import $ from 'jquery'
+import $ from 'jquery';
+import { Dataset } from '../dataset';
 
 @Component({
   selector: 'app-chart',
@@ -10,18 +11,33 @@ import $ from 'jquery'
 export class ChartComponent implements OnInit {
   @Input() chartOptions: any;
   @Input() chartData: any;
-  @Input() chartType: string = 'bar';
+  @Input() chartType = 'bar';
   @ViewChild('canvas') canvas: ElementRef;
-
-  constructor() { 
+  allSets: [{ enabled: boolean; dataset: Dataset }];
+  chart;
+  constructor() {
   }
 
   ngOnInit() {
-    var myChart = new Chart(this.canvas.nativeElement, {
+    this.allSets = this.chartData.datasets.map(s => ({ enabled: true, dataset: s }));
+    this.chart = new Chart(this.canvas.nativeElement, {
       type: this.chartType,
       data: this.chartData,
       options: this.chartOptions
     });
+  }
+
+  onToggleSelect(setWrapper) {
+    const chartDatasets = this.chartData.datasets;
+    if (setWrapper.enabled) {
+      const index = chartDatasets.indexOf(setWrapper.dataset);
+      chartDatasets.splice(index, 1);
+    } else {
+      this.chartData.datasets.push(setWrapper.dataset);
+    }
+
+    setWrapper.enabled = !setWrapper.enabled;
+    this.chart.update();
   }
 
 }

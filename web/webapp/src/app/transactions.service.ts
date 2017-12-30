@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishReplay';
 
-import { Transaction } from './transaction'
+import { Transaction } from './transaction';
 
 @Injectable()
 export class TransactionsService {
@@ -15,16 +15,19 @@ export class TransactionsService {
 
   getTransactions(): Observable<Transaction[]> {
     if (!this.transactions$) {
-      this.transactions$ = this.http.get("api/transactions")
-      .map(x => {
-        let elements = <Transaction[]>x;
-        elements.forEach(element => {
-          element.date = new Date(element.date);
-        });
-        return elements;
-      })
-      .publishReplay()
-      .refCount();
+      this.transactions$ = this.http.get('api/transactions')
+        .map(x => {
+          const elements = <Transaction[]>x;
+          elements.forEach(element => {
+            element.date = new Date(element.date);
+            if (element.tags.length === 0) {
+              element.tags.push('untagged');
+            }
+          });
+          return elements;
+        })
+        .publishReplay()
+        .refCount();
     }
 
     return this.transactions$;

@@ -1,4 +1,4 @@
-import {TransactionType} from './transactionType'
+import { TransactionType } from './transactionType';
 
 export interface Transaction {
     transactionType: TransactionType;

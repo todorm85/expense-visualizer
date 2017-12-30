@@ -8,30 +8,30 @@ export class TransactionsChartUtilsService {
   constructor() { }
 
   getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
   }
 
   getAmountPerMonthForEachTag(transactions: Transaction[]): Dataset[] {
-    let color = this.getRandomColor();
-    let transactionsByTag: Array<{ tag: string, transactions: Array<Transaction> }> = [];
+    const color = this.getRandomColor();
+    const transactionsByTag: Array<{ tag: string, transactions: Array<Transaction> }> = [];
     transactions.forEach(t => {
       let tag = t.tags[0];
-      let tagGroupIdx = transactionsByTag.findIndex(x => x.tag === tag);
+      const tagGroupIdx = transactionsByTag.findIndex(x => x.tag === tag);
       if (tagGroupIdx >= 0) {
         transactionsByTag[tagGroupIdx].transactions.push(t);
       } else {
-        transactionsByTag.push({ tag, transactions: [t] })
+        transactionsByTag.push({ tag, transactions: [t] });
       }
-    })
+    });
 
-    let datasets: Dataset[] = [];
+    const datasets: Dataset[] = [];
     transactionsByTag.forEach(tbt => {
-      let dataset = this.getAmountPerMonth(tbt.transactions, tbt.tag);
+      const dataset = this.getAmountPerMonth(tbt.transactions, tbt.tag);
       datasets.push(dataset);
     });
 
@@ -39,23 +39,23 @@ export class TransactionsChartUtilsService {
   }
 
   getAmountPerMonth(transactions: Transaction[], label: string): Dataset {
-    let data = [];
+    const data = [];
     transactions.forEach(transaction => {
-      let year = transaction.date.getFullYear();
-      let month = transaction.date.getMonth();
-      let dataIndex = data.findIndex(x => x.x.getFullYear() === year && x.x.getMonth() === month);
+      const year = transaction.date.getFullYear();
+      const month = transaction.date.getMonth();
+      const dataIndex = data.findIndex(x => x.x.getFullYear() === year && x.x.getMonth() === month);
       if (dataIndex >= 0) {
         data[dataIndex].y += transaction.amount;
       } else {
         data.push({
           x: new Date(year, month),
           y: transaction.amount
-        })
+        });
       }
     });
 
-    let color = this.getRandomColor();
-    let dataset: Dataset = {
+    const color = this.getRandomColor();
+    const dataset: Dataset = {
       label,
       data: data,
       backgroundColor: color,
@@ -67,8 +67,8 @@ export class TransactionsChartUtilsService {
   }
 
   getAvgAmount(set: Dataset, label: string): Dataset {
-    let color = this.getRandomColor();
-    let avgDataset: Dataset = {
+    const color = this.getRandomColor();
+    const avgDataset: Dataset = {
       label,
       data: [],
       backgroundColor: color,
@@ -82,7 +82,7 @@ export class TransactionsChartUtilsService {
       avgDataset.data.push({
         x: entry.x,
         y: currentEntriesAmountSum / (avgDataset.data.length + 1)
-      })
+      });
     });
 
     return avgDataset;
