@@ -20,8 +20,7 @@ export class TransactionListComponent implements OnInit {
   allTransactions: Transaction[];
   loading = true;
 
-  constructor(private service: TransactionsService, private transactionUtils: TransactionUtilsService,
-    private zone: NgZone) { }
+  constructor(private service: TransactionsService, private transactionUtils: TransactionUtilsService) { }
 
   ngOnInit() {
     this.service.getTransactions().subscribe(transactions => {
@@ -38,7 +37,7 @@ export class TransactionListComponent implements OnInit {
     setTimeout(() => {
       this.filterTransactions();
       this.loading = false;
-    }, 0);
+    }, 1000);
   }
 
   private filterTransactions() {
