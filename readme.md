@@ -1,4 +1,3 @@
-App to track my expenses
+App to track and visualize expenses
 
 ```dotnet run```
-to run the app
