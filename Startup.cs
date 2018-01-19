@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ExpenseTracker.Core;
+using ExpenseTracker.Core.Tags;
+using ExpenseTracker.Core.Transactions;
+using ExpenseTracker.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,9 +22,10 @@ namespace ExpenseTracker
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddTransient<AllianzDataSource, AllianzDataSource>();
+            services.AddTransient<ITransactionsProvider, AllianzTransactionsProvider>();
             services.AddTransient<Tagger, Tagger>();
             services.AddTransient<TagConfigProvider, TagConfigProvider>();
+            services.AddTransient<ITransactionsService, TransactionsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,12 +48,8 @@ namespace ExpenseTracker
                 }
             });
 
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc();
             app.UseFileServer();
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
-            });
         }
     }
 }

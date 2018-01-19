@@ -10,9 +10,9 @@ namespace ExpenseTracker.Web.Controllers
     [Route("api/[controller]")]
     public class TransactionsController : Controller
     {
-        private AllianzDataSource source;
+        private ITransactionsProvider source;
 
-        public TransactionsController(AllianzDataSource source)
+        public TransactionsController(ITransactionsProvider source)
         {
             this.source = source;
         }

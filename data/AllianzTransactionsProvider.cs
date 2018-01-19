@@ -2,23 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
+using ExpenseTracker.Core;
+using ExpenseTracker.Core.Transactions;
 
-namespace ExpenseTracker.Core
+namespace ExpenseTracker.Data
 {
-    public class AllianzDataSource
+    public class AllianzTransactionsProvider : ITransactionsProvider
     {
         private const string AmountKeyName = "amount";
 
         private const string DatetimeKeyName = "datetime";
 
         private const string TransactionTypeKeyName = "dtkt";
-
-        private Tagger tagger;
-
-        public AllianzDataSource(Tagger tagger)
-        {
-            this.tagger = tagger;
-        }
 
         public List<Transaction> GetTransactions()
         {

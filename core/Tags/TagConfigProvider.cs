@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 
-namespace ExpenseTracker.Core
+namespace ExpenseTracker.Core.Tags
 {
     public class TagConfigProvider
     {
