@@ -7,7 +7,7 @@ using ExpenseTracker.Core.Transactions;
 
 namespace ExpenseTracker.Data
 {
-    public class AllianzTransactionsProvider : ITransactionsProvider
+    public class AllianzXmlTransactionsProvider : IXmlTransactionsImporter
     {
         private const string AmountKeyName = "amount";
 
@@ -15,10 +15,10 @@ namespace ExpenseTracker.Data
 
         private const string TransactionTypeKeyName = "dtkt";
 
-        public List<Transaction> GetTransactions()
+        public IEnumerable<Transaction> GetTransactions(string filePath = "data.xml")
         {
             var parser = new XmlDocument();
-            parser.Load("data.xml");
+            parser.Load(filePath);
             var transactions = parser.FirstChild.ChildNodes;
             var parsedTransactions = new List<Transaction>();
             foreach (XmlNode t in transactions)
@@ -53,7 +53,6 @@ namespace ExpenseTracker.Data
                 else
                 {
                     transaction.Details.Add(attribute.Name, attribute.Value);
-                    transaction.Tags.UnionWith(this.tagger.GetTags(attribute.Value));
                 }
             }
 

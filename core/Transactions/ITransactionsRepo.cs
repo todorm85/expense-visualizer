@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 namespace ExpenseTracker.Core.Transactions
 {
-    public interface ITransactionsService
+    public interface ITransactionsRepo
     {
         IEnumerable<Transaction> GetTransactions();
-
-        void ImportTransactions(string sourcePath);
+        void AddTransactions(IEnumerable<Transaction> transactions);
+        void SaveChanges();
     }
 }

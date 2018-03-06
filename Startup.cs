@@ -17,14 +17,19 @@ namespace ExpenseTracker
 {
     public class Startup
     {
+        public const string AllianzImporterDIKey = "allianzXmlImporter";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddTransient<ITransactionsProvider, AllianzTransactionsProvider>();
-            services.AddTransient<Tagger, Tagger>();
-            services.AddTransient<TagConfigProvider, TagConfigProvider>();
+
+            services.AddTransient<ITransactionsRepo, TransactionsRepo>();
+            services.AddTransient<IXmlTransactionsImporter, AllianzXmlTransactionsProvider>();
+
+            services.AddTransient<Tagger>();
+            services.AddTransient<TagConfigProvider>();
             services.AddTransient<ITransactionsService, TransactionsService>();
         }
 
@@ -39,17 +44,37 @@ namespace ExpenseTracker
             app.Use(async (context, next) =>
             {
                 await next();
-                if (context.Response.StatusCode == 404 &&
-                   !Path.HasExtension(context.Request.Path.Value) &&
-                   !context.Request.Path.Value.StartsWith("/api/"))
+                if (ResourceIsNotFound(context) &&
+                   IsNotFileRequest(context) &&
+                   IsNotApiCall(context))
                 {
-                    context.Request.Path = "/index.html";
+                    RedirectToSPA(context);
                     await next();
                 }
             });
 
             app.UseMvc();
             app.UseFileServer();
+        }
+
+        private static void RedirectToSPA(HttpContext context)
+        {
+            context.Request.Path = "/index.html";
+        }
+
+        private static bool ResourceIsNotFound(HttpContext context)
+        {
+            return context.Response.StatusCode == 404;
+        }
+
+        private static bool IsNotApiCall(HttpContext context)
+        {
+            return !context.Request.Path.Value.StartsWith("/api/");
+        }
+
+        private static bool IsNotFileRequest(HttpContext context)
+        {
+            return !Path.HasExtension(context.Request.Path.Value);
         }
     }
 }

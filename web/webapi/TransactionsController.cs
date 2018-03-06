@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExpenseTracker.Core;
+using ExpenseTracker.Core.Transactions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseTracker.Web.Controllers
@@ -10,9 +11,9 @@ namespace ExpenseTracker.Web.Controllers
     [Route("api/[controller]")]
     public class TransactionsController : Controller
     {
-        private ITransactionsProvider source;
+        private ITransactionsService source;
 
-        public TransactionsController(ITransactionsProvider source)
+        public TransactionsController(ITransactionsService source)
         {
             this.source = source;
         }
