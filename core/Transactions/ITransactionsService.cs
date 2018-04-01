@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ExpenseTracker.Core.Transactions.Model;
 
 namespace ExpenseTracker.Core.Transactions
 {
@@ -6,6 +7,6 @@ namespace ExpenseTracker.Core.Transactions
     {
         IEnumerable<Transaction> GetTransactions();
 
-        void ImportTransactions(string sourcePath);
+        void ParseTransactions(string sourcePath);
     }
 }

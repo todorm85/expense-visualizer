@@ -4,10 +4,11 @@ using System.Globalization;
 using System.Xml;
 using ExpenseTracker.Core;
 using ExpenseTracker.Core.Transactions;
+using ExpenseTracker.Core.Transactions.Model;
 
-namespace ExpenseTracker.Data
+namespace ExpenseTracker.Core.Transactions
 {
-    public class AllianzXmlTransactionsProvider : IXmlTransactionsImporter
+    public class AllianzXmlTransactionsParser
     {
         private const string AmountKeyName = "amount";
 
@@ -52,7 +53,8 @@ namespace ExpenseTracker.Data
                 }
                 else
                 {
-                    transaction.Details.Add(attribute.Name, attribute.Value);
+                    transaction.Details.Add(
+                        $"{attribute.Name}{Environment.NewLine}{attribute.Value}");
                 }
             }
 

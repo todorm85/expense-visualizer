@@ -12,35 +12,38 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker
 {
     public class Startup
     {
-        public const string AllianzImporterDIKey = "allianzXmlImporter";
+        public Startup(IHostingEnvironment env, IConfiguration config)
+        {
+            Configuration = config;
+        }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddEntityFrameworkSqlite()
+                .AddDbContext<ExpenseTrackerContext>(builder =>
+                {
+                    builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                });
 
             services.AddTransient<ITransactionsRepo, TransactionsRepo>();
-            services.AddTransient<IXmlTransactionsImporter, AllianzXmlTransactionsProvider>();
+            services.AddTransient<AllianzXmlTransactionsParser>();
 
             services.AddTransient<Tagger>();
             services.AddTransient<TagConfigProvider>();
             services.AddTransient<ITransactionsService, TransactionsService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            
             app.Use(async (context, next) =>
             {
                 await next();

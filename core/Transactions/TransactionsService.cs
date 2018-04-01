@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ExpenseTracker.Core.Tags;
+using ExpenseTracker.Core.Transactions.Model;
 
 namespace ExpenseTracker.Core.Transactions
 {
@@ -9,34 +10,34 @@ namespace ExpenseTracker.Core.Transactions
     {
         private ITransactionsRepo repo;
         private Tagger tagger;
-        private IXmlTransactionsImporter importer;
+        private AllianzXmlTransactionsParser parser;
 
-        public TransactionsService(ITransactionsRepo source, Tagger tagger, IXmlTransactionsImporter importer)
+        internal TransactionsService(ITransactionsRepo source, Tagger tagger, AllianzXmlTransactionsParser parser)
         {
             this.repo = source;
             this.tagger = tagger;
-            this.importer = importer;
+            this.parser = parser;
         }
 
         public IEnumerable<Transaction> GetTransactions()
         {
             var transactions = this.repo.GetTransactions();
-            foreach (var t in transactions)
-            {
-                foreach (var d in t.Details)
-                {
-                    var tags = this.tagger.GetTags(d.Value);
-                    t.Tags.UnionWith(tags);
-                }
-            }
-
             return transactions;
         }
 
-        public void ImportTransactions(string sourcePath)
+        public void ParseTransactions(string sourcePath)
         {
-            var transactions = this.importer.GetTransactions(sourcePath);
+            var transactions = this.parser.GetTransactions(sourcePath);
             this.repo.AddTransactions(transactions);
+        }
+
+        public void TagTransactions(IEnumerable<Transaction> transactions)
+        {
+            this.tagger.TagTransactions(transactions);
+        }
+
+        public void SaveChanges()
+        {
             this.repo.SaveChanges();
         }
     }

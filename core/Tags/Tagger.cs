@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using ExpenseTracker.Core.Transactions;
+using ExpenseTracker.Core.Transactions.Model;
 namespace ExpenseTracker.Core.Tags
 {
-    public class Tagger
+    internal class Tagger
     {
         private TagConfigProvider tagConfigProvider;
 
@@ -12,7 +14,22 @@ namespace ExpenseTracker.Core.Tags
             this.tagConfigProvider = provider;
         }
         
-        public IEnumerable<string> GetTags(string text)
+        public void TagTransactions(IEnumerable<Transaction> transactions)
+        {
+            foreach (var transaction in transactions)
+            {
+                foreach (var detail in transaction.Details)
+                {
+                    var tags = this.GetTags(detail);
+                    foreach (var tag in tags)
+                    {
+                        transaction.Tags.Add(new Tag() { Name = tag });
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<string> GetTags(string text)
         {
             var tags = new HashSet<string>();
             var tagConfigs = this.tagConfigProvider.GetTagConfigs();

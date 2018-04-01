@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace ExpenseTracker.Core.Tags
 {
-    public class TagConfigProvider
+    internal class TagConfigProvider
     {
         private IConfiguration config;
         public TagConfigProvider(IConfiguration config)

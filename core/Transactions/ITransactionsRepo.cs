@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ExpenseTracker.Core.Transactions.Model;
 
 namespace ExpenseTracker.Core.Transactions
 {
