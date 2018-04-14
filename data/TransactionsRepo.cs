@@ -14,17 +14,17 @@ namespace ExpenseTracker.Data
         }
         public void AddTransactions(IEnumerable<Transaction> transactions)
         {
-            throw new System.NotImplementedException();
+            this.context.Transactions.AddRange(transactions);
         }
 
         public IEnumerable<Transaction> GetTransactions()
         {
-            throw new System.NotImplementedException();
+            return this.context.Transactions;
         }
 
         public void SaveChanges()
         {
-            throw new System.NotImplementedException();
+            this.context.SaveChanges();
         }
     }
 }

@@ -7,9 +7,9 @@ namespace ExpenseTracker.Core.Transactions.Model
     {
         public Tag()
         {
-            this.KeyPhrases = new List<string>();
+            this.KeyPhrases = new List<KeyPhrase>();
         }
         public string Name { get; set; }
-        public List<string> KeyPhrases {get;set;}
+        public List<KeyPhrase> KeyPhrases {get;set;}
     }
 }

@@ -13,18 +13,15 @@ namespace ExpenseTracker.Core.Tags
         {
             this.tagConfigProvider = provider;
         }
-        
+
         public void TagTransactions(IEnumerable<Transaction> transactions)
         {
             foreach (var transaction in transactions)
             {
-                foreach (var detail in transaction.Details)
+                var tags = this.GetTags(transaction.Details);
+                foreach (var tag in tags)
                 {
-                    var tags = this.GetTags(detail);
-                    foreach (var tag in tags)
-                    {
-                        transaction.Tags.Add(new Tag() { Name = tag });
-                    }
+                    transaction.Tags.Add(new Tag() { Name = tag });
                 }
             }
         }

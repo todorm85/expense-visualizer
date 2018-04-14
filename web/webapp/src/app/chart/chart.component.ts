@@ -27,16 +27,16 @@ export class ChartComponent implements OnInit {
     });
   }
 
-  onToggleSelect(setWrapper) {
+  onToggleSelect(datasetWrapper) {
     const chartDatasets = this.chartData.datasets;
-    if (setWrapper.enabled) {
-      const index = chartDatasets.indexOf(setWrapper.dataset);
+    if (datasetWrapper.enabled) {
+      const index = chartDatasets.indexOf(datasetWrapper.dataset);
       chartDatasets.splice(index, 1);
     } else {
-      this.chartData.datasets.push(setWrapper.dataset);
+      this.chartData.datasets.push(datasetWrapper.dataset);
     }
 
-    setWrapper.enabled = !setWrapper.enabled;
+    datasetWrapper.enabled = !datasetWrapper.enabled;
     this.chart.update();
   }
 
