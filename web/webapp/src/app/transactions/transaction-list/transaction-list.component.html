@@ -1,0 +1,13 @@
+<ng-container *ngIf="!loading else loadingView">
+  <div>
+    <select [(ngModel)]="filterTag" (change)="showTransactions()">
+      <option *ngFor="let tag of tags" [value]="tag" [selected]="filterTag === tag">{{tag}}</option>
+    </select>
+    <div *ngFor="let transaction of transactions" class="transaction-details">
+      {{JSON.stringify(transaction.details)}} {{ TransactionType[transaction.transactionType] }} {{transaction.amount}} {{transaction.date
+      | date:"dd/MM/yy"}} {{transaction.tags}}
+      <hr>
+    </div>
+  </div>
+</ng-container>
+<ng-template #loadingView>LOADING</ng-template>

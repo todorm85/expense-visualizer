@@ -1,3 +1,4 @@
+using ExpenseTracker.Core.Tags.Model;
 using ExpenseTracker.Core.Transactions.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,16 +10,9 @@ namespace ExpenseTracker.Data
         { }
 
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Tag> Tags { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Tag>()
-                .HasKey(t => t.Name);
-            modelBuilder.Entity<Tag>()
-                .HasMany(x => x.KeyPhrases);
-            modelBuilder.Entity<Transaction>()
-                .HasMany(x => x.Tags);
-        }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<KeyPhrase> KeyPhrases { get; set; }
+
     }
 }

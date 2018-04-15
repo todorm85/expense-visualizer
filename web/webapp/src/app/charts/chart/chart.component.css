@@ -1,0 +1,8 @@
+.checkboxContainer, .canvasContainer {
+    display: inline-block;
+}
+
+.canvasContainer {
+    border: 1px solid black;
+}
+

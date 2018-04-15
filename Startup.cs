@@ -34,11 +34,10 @@ namespace ExpenseTracker
                     builder.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
                 });
 
-            services.AddTransient<ITransactionsRepo, TransactionsRepo>();
+            services.AddTransient(typeof(IGenericRepo<>), typeof(GenericEntityFrameworkRepo<>));
             services.AddTransient<AllianzXmlTransactionsParser>();
 
             services.AddTransient<Tagger>();
-            services.AddTransient<TagConfigProvider>();
             services.AddTransient<ITransactionsService, TransactionsService>();
         }
 

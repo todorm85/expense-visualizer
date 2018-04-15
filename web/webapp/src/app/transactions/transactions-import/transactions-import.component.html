@@ -1,0 +1,12 @@
+<p>
+    transactions-import.
+</p>
+
+<div class="form-group" *ngIf="!isUploading else loading">
+    <label for="file">Choose File</label>
+    <input type="file" id="file" (change)="onFileSelected($event.target.files)">
+    <button (click)="onFileUpload()">Import</button>
+</div>
+<ng-template #loading>
+    WAIT...
+</ng-template>

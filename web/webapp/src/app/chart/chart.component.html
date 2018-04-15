@@ -1,7 +1,0 @@
-<div style="max-width: 700px; max-height: 400px;" class="canvasContainer">
-  <canvas #canvas width="700" height="400"></canvas>
-</div>
-<div *ngFor="let set of allSets" class="checkboxContainer">
-  <input type="checkbox" id="{{set.dataset.label}}" [(checked)]="set.enabled" (change)="onToggleSelect(set)">
-  <label for="{{set.dataset.label}}">{{set.dataset.label}}</label>
-</div>

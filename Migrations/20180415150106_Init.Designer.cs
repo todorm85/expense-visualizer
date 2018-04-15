@@ -12,9 +12,10 @@ using System;
 namespace ExpenseTracker.Migrations
 {
     [DbContext(typeof(ExpenseTrackerContext))]
-    partial class ExpenseTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20180415150106_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

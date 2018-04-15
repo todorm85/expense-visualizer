@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using System.IO;
 using ExpenseTracker.Core.Transactions.Model;
 
 namespace ExpenseTracker.Core.Transactions
 {
     public interface ITransactionsService
     {
-        IEnumerable<Transaction> GetTransactions();
-
-        void ParseTransactions(string sourcePath);
+        void ImportTransactions(Stream fileStrem);
+        void RetagAllTransactions();
     }
 }

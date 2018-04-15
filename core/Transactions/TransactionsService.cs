@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ExpenseTracker.Core.Tags;
 using ExpenseTracker.Core.Transactions.Model;
@@ -8,37 +9,54 @@ namespace ExpenseTracker.Core.Transactions
 {
     public class TransactionsService : ITransactionsService
     {
-        private ITransactionsRepo repo;
-        private Tagger tagger;
+        private IGenericRepo<Transaction> transactionsRepo;
         private AllianzXmlTransactionsParser parser;
+        private Tagger tagger;
 
-        internal TransactionsService(ITransactionsRepo source, Tagger tagger, AllianzXmlTransactionsParser parser)
+        public TransactionsService(
+            IGenericRepo<Transaction> transactionsRepo,
+            AllianzXmlTransactionsParser parser,
+            Tagger tagger)
         {
-            this.repo = source;
-            this.tagger = tagger;
+            this.transactionsRepo = transactionsRepo;
             this.parser = parser;
+            this.tagger = tagger;
         }
 
-        public IEnumerable<Transaction> GetTransactions()
+        public void ImportTransactions(Stream fileStrem)
         {
-            var transactions = this.repo.GetTransactions();
-            return transactions;
+            var newTransactions = this.parser.GetTransactions(fileStrem).ToList();
+            var existingTransactions = this.transactionsRepo.Get();
+            foreach (var existingTransaction in existingTransactions)
+            {
+                var duplicate = newTransactions.Find(t => this.CompareTransactions(t, existingTransaction));
+                if (duplicate != null)
+                {
+                    newTransactions.Remove(duplicate);
+                }
+            }
+
+            if (newTransactions.Count > 0)
+            {
+                this.tagger.TagTransactions(newTransactions);
+                this.transactionsRepo.Add(newTransactions);
+                this.transactionsRepo.SaveChanges();
+            }
         }
 
-        public void ParseTransactions(string sourcePath)
+        public void RetagAllTransactions()
         {
-            var transactions = this.parser.GetTransactions(sourcePath);
-            this.repo.AddTransactions(transactions);
+            this.tagger.TagTransactions(this.transactionsRepo.Get());
         }
 
-        public void TagTransactions(IEnumerable<Transaction> transactions)
+        private bool CompareTransactions(Transaction t1, Transaction t2)
         {
-            this.tagger.TagTransactions(transactions);
+            return t1.Date == t2.Date && t1.Details == t2.Details;
         }
 
         public void SaveChanges()
         {
-            this.repo.SaveChanges();
+            this.transactionsRepo.SaveChanges();
         }
     }
 }

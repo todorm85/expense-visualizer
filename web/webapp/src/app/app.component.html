@@ -1,7 +1,13 @@
-<h1>{{title}}</h1>
-<nav>
-  <a routerLink="/chart-list">Charts</a>
-  <a routerLink="/transaction-list">Transactions</a>
-</nav>
-<hr>
-<router-outlet></router-outlet>
+<div style="height: 20%">
+
+  <h1>{{title}}</h1>
+  <nav>
+    <a routerLink="/charts">Charts</a>
+    <a routerLink="/transactions">Transactions</a>
+    <a routerLink="/tags">Tags</a>
+  </nav>
+  <hr>
+</div>
+  <div style="height: 80%">
+  <router-outlet></router-outlet>
+</div>

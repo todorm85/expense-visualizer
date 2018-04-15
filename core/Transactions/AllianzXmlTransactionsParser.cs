@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Xml;
 using ExpenseTracker.Core;
 using ExpenseTracker.Core.Transactions;
@@ -16,10 +17,10 @@ namespace ExpenseTracker.Core.Transactions
 
         private const string TransactionTypeKeyName = "dtkt";
 
-        public IEnumerable<Transaction> GetTransactions(string filePath = "data.xml")
+        public IEnumerable<Transaction> GetTransactions(Stream fileStream)
         {
             var parser = new XmlDocument();
-            parser.Load(filePath);
+            parser.Load(fileStream);
             var transactions = parser.FirstChild.ChildNodes;
             var parsedTransactions = new List<Transaction>();
             foreach (XmlNode t in transactions)
@@ -53,8 +54,8 @@ namespace ExpenseTracker.Core.Transactions
                 }
                 else
                 {
-                    transaction.Details.Add(
-                        $"{attribute.Name}{Environment.NewLine}{attribute.Value}");
+                    transaction.Details += 
+                        $"{attribute.Name}:={attribute.Value}{Environment.NewLine}";
                 }
             }
 
