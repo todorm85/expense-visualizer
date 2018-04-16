@@ -3,6 +3,7 @@ import { TransactionsChartUtilsService } from '../transactions-chart-utils.servi
 import { TransactionsService } from '../../transactions/transactions.service';
 import { Transaction } from '../../transactions/transaction';
 import { TransactionType } from '../../transactions/transactionType';
+import { Dataset } from '../dataset';
 
 @Component({
   selector: 'app-chart-list',
@@ -10,19 +11,23 @@ import { TransactionType } from '../../transactions/transactionType';
   styleUrls: ['./chart-list.component.css']
 })
 export class ChartListComponent implements OnInit {
-  charts: any[] = [];
-
+  avgTotalsDataset: Dataset;
+  totalsDataset: Dataset;
+  datasetsByTagAndMonth: Dataset[];
+  charts: any[];
+  allTransactions: Transaction[];
+  avgRange: number = 2;
   constructor(private service: TransactionsService, private utils: TransactionsChartUtilsService) { }
 
   ngOnInit() {
-    this.service.getTransactions().subscribe(x => this.addCharts(x));
+    this.service.getTransactions().subscribe(x => {
+    this.allTransactions = x;
+    this.initCharts(x);
+    });
   }
 
-  addCharts(transactions: Transaction[]): void {
-    const debitTransactions = transactions.filter(x => x.transactionType === TransactionType.Debit);
-    const datasetsByTagAndMonth = this.utils.getAmountPerMonthForEachTag(debitTransactions);
-    const totalsDataset = this.utils.getAmountPerMonth(debitTransactions, 'totals');
-    const avgTotalsDataset = this.utils.getAvgAmount(totalsDataset, 'totals-avg');
+  initCharts(transactions: Transaction[]): void {
+    this.initSets(transactions);
     const chartOptions = {
       scales: {
         yAxes: [{
@@ -41,7 +46,26 @@ export class ChartListComponent implements OnInit {
       }
     };
 
-    let chartData = { datasets: [].concat(totalsDataset, avgTotalsDataset, ...datasetsByTagAndMonth) };
+    let chartData = { datasets: [].concat(this.totalsDataset, this.avgTotalsDataset, ...this.datasetsByTagAndMonth) };
+    this.charts = [];
     this.charts.push({ chartData, chartOptions, id: 'total' });
+  }
+
+  private initSets(transactions: Transaction[]) {
+    const debitTransactions = transactions.filter(x => x.transactionType === TransactionType.Debit);
+    this.datasetsByTagAndMonth = this.utils.getAmountPerMonthForEachTag(debitTransactions);
+    this.totalsDataset = this.utils.getAmountPerMonth(debitTransactions, 'totals');
+    this.avgTotalsDataset = this.utils.getAvgAmount(this.totalsDataset, 'totals-avg', this.avgRange);
+  }
+
+  onFilterClick(fromDate, toDate) {
+    fromDate = new Date(fromDate.value);
+    toDate = new Date(toDate.value);
+    let filtered = this.allTransactions;
+    if (fromDate < toDate) {
+      filtered = this.allTransactions.slice().filter(x => x.date > fromDate && x.date < toDate);
+    }
+
+    this.initCharts(filtered);
   }
 }

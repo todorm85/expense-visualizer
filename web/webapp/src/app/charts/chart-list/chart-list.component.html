@@ -1,3 +1,12 @@
 <div>
+  <h2>
+    Filter
+  </h2>
+  Simple moving average period: <input type="number" [(ngModel)]="avgRange">
+  From date: <input type="date" #fromDate>
+  To date: <input type="date" #toDate>
+  <button (click)="onFilterClick(fromDate, toDate)">Filter</button>
+</div>
+<div>
   <app-chart *ngFor="let chart of charts" [chartOptions]="chart.chartOptions" [chartData]="chart.chartData"></app-chart>
 </div>

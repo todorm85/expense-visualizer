@@ -66,7 +66,7 @@ export class TransactionsChartUtilsService {
     return dataset;
   }
 
-  getAvgAmount(set: Dataset, label: string): Dataset {
+  getAvgAmount(set: Dataset, label: string, range: number): Dataset {
     const color = this.getRandomColor();
     const avgDataset: Dataset = {
       label,
@@ -76,14 +76,32 @@ export class TransactionsChartUtilsService {
       fill: false
     };
 
-    let currentEntriesAmountSum = 0;
-    set.data.forEach(entry => {
-      currentEntriesAmountSum += entry.y;
+    // let currentEntriesAmountSum = 0;
+    // set.data.forEach(entry => {
+    //   currentEntriesAmountSum += entry.y;
+    //   avgDataset.data.push({
+    //     x: entry.x,
+    //     y: currentEntriesAmountSum / (avgDataset.data.length + 1)
+    //   });
+    // });
+
+    for (let avgEntryIndex = 0; avgEntryIndex < set.data.length; avgEntryIndex++) {
+      const currentTotalEntry = set.data[avgEntryIndex];
+      let allTotalsAmountSum = 0;
+      let allTotalsCount = 0;
+      for (let totalEntryIndex = avgEntryIndex - range; totalEntryIndex < avgEntryIndex + range; totalEntryIndex++) {
+        const totalEntry = set.data[totalEntryIndex];
+        if (totalEntry) {
+          allTotalsCount++;
+          allTotalsAmountSum += totalEntry.y;
+        }
+      }
+      
       avgDataset.data.push({
-        x: entry.x,
-        y: currentEntriesAmountSum / (avgDataset.data.length + 1)
-      });
-    });
+            x: currentTotalEntry.x,
+            y: allTotalsAmountSum / allTotalsCount
+          });
+    }
 
     return avgDataset;
   }
