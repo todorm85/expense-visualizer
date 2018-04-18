@@ -1,7 +1,20 @@
+<div>
+  <h3> Filter </h3>
+  <label for="fromDateInput">From date:</label>
+  <input type="date" name="fromDateInput" #fromDate>
+  <label for="toDateInput">To date:</label>
+  <input type="date" name="toDateInput" #toDate>
+  <button (click)="onFilterClick(fromDate, toDate)">Filter</button>
+</div>
+
+<div>
+  <h3>Chart config</h3>
+  <label for="horStep">Horizontal grids step</label>
+  <input name="horStep" type="numer" [(ngModel)]="horizontalGridStepSize" (change)="onChartConfigChanged()">
+  <label for="periodInput">Simple moving average period:</label>
+  <input name="periodInput" type="number" [(ngModel)]="period" (change)="onChartConfigChanged()">
+</div>
+
 <div style="display: block">
   <canvas #canvas width="16" height="7"></canvas>
-</div>
-<div *ngFor="let set of allSets" class="checkboxContainer">
-  <input type="checkbox" id="{{set.dataset.label}}" [(checked)]="set.enabled" (change)="onToggleSelect(set)">
-  <label for="{{set.dataset.label}}">{{set.dataset.label}}</label>
 </div>

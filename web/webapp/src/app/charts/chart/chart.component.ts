@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import Chart from 'chart.js';
 import $ from 'jquery';
 import { Dataset } from '../dataset';
+import { Transaction } from '../../transactions/transaction';
+import { TransactionType } from '../../transactions/transactionType';
+import { TransactionsChartUtilsService } from '../transactions-chart-utils.service';
 
 @Component({
   selector: 'app-chart',
@@ -9,35 +12,76 @@ import { Dataset } from '../dataset';
   styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit {
-  @Input() chartOptions: any;
-  @Input() chartData: any;
-  @Input() chartType = 'line';
+  avgTotalsDataset: Dataset;
+  totalsDataset: Dataset;
+  datasetsByTagAndMonth: Dataset[];
+  @Input() allTransactions: Transaction[];
+  period: number = 6;
   @ViewChild('canvas') canvas: ElementRef;
-  allSets: [{ enabled: boolean; dataset: Dataset }];
-  chart;
-  constructor() {
+  horizontalGridStepSize:number = 500;
+  private chart;
+  chartTransactions: Transaction[];
+  constructor(private utils: TransactionsChartUtilsService) {
   }
 
   ngOnInit() {
-    this.allSets = this.chartData.datasets.map(s => ({ enabled: true, dataset: s }));
+    this.chartTransactions = this.allTransactions.slice();
+    this.initChart();
+  }
+
+  onFilterClick(fromDate, toDate) {
+    fromDate = new Date(fromDate.value);
+    toDate = new Date(toDate.value);
+    if (fromDate < toDate) {
+      this.chartTransactions = this.allTransactions.slice().filter(x => x.date > fromDate && x.date < toDate);
+    }
+
+    this.initChart();
+  }
+
+
+  private initChart(): void {
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
+    this.initSets(this.chartTransactions);
+    const chartOptions = {
+      scales: {
+        yAxes: [{
+          type: 'linear',
+          position: 'right',
+          ticks: {
+            stepSize: this.horizontalGridStepSize
+          },
+        }],
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: 'month',
+            unitStepSize: 1
+          }
+        }]
+      }
+    };
+
+    let chartData = { datasets: [].concat(this.totalsDataset, this.avgTotalsDataset, ...this.datasetsByTagAndMonth) };
+
     this.chart = new Chart(this.canvas.nativeElement.getContext('2d'), {
-      type: this.chartType,
-      data: this.chartData,
-      options: this.chartOptions
+      type: "line",
+      data: chartData,
+      options: chartOptions
     });
   }
 
-  onToggleSelect(datasetWrapper) {
-    const chartDatasets = this.chartData.datasets;
-    if (datasetWrapper.enabled) {
-      const index = chartDatasets.indexOf(datasetWrapper.dataset);
-      chartDatasets.splice(index, 1);
-    } else {
-      this.chartData.datasets.push(datasetWrapper.dataset);
-    }
-
-    datasetWrapper.enabled = !datasetWrapper.enabled;
-    this.chart.update();
+  private initSets(transactions: Transaction[]) {
+    const debitTransactions = transactions.filter(x => x.transactionType === TransactionType.Debit);
+    this.datasetsByTagAndMonth = this.utils.getAmountPerMonthForEachTag(debitTransactions);
+    this.totalsDataset = this.utils.getAmountPerMonth(debitTransactions, 'totals');
+    this.avgTotalsDataset = this.utils.getSimpleMovingAvg(this.totalsDataset, `SMA(${this.period})`, this.period);
   }
 
+  onChartConfigChanged() {
+    this.initChart();
+  }
 }

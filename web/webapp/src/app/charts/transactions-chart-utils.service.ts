@@ -66,7 +66,7 @@ export class TransactionsChartUtilsService {
     return dataset;
   }
 
-  getAvgAmount(set: Dataset, label: string, range: number): Dataset {
+  getSimpleMovingAvg(set: Dataset, label: string, period: number): Dataset {
     const color = this.getRandomColor();
     const avgDataset: Dataset = {
       label,
@@ -76,20 +76,11 @@ export class TransactionsChartUtilsService {
       fill: false
     };
 
-    // let currentEntriesAmountSum = 0;
-    // set.data.forEach(entry => {
-    //   currentEntriesAmountSum += entry.y;
-    //   avgDataset.data.push({
-    //     x: entry.x,
-    //     y: currentEntriesAmountSum / (avgDataset.data.length + 1)
-    //   });
-    // });
-
-    for (let avgEntryIndex = 0; avgEntryIndex < set.data.length; avgEntryIndex++) {
+    for (let avgEntryIndex = period; avgEntryIndex < set.data.length; avgEntryIndex++) {
       const currentTotalEntry = set.data[avgEntryIndex];
       let allTotalsAmountSum = 0;
       let allTotalsCount = 0;
-      for (let totalEntryIndex = avgEntryIndex - range; totalEntryIndex < avgEntryIndex + range; totalEntryIndex++) {
+      for (let totalEntryIndex = avgEntryIndex - period; totalEntryIndex <= avgEntryIndex; totalEntryIndex++) {
         const totalEntry = set.data[totalEntryIndex];
         if (totalEntry) {
           allTotalsCount++;
