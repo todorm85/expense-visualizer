@@ -4,7 +4,7 @@ using System.Linq;
 using ExpenseTracker.Core.Tags.Model;
 using ExpenseTracker.Core.Transactions;
 using ExpenseTracker.Core.Transactions.Model;
-namespace ExpenseTracker.Core
+namespace ExpenseTracker.Core.Tags
 {
     public class Tagger
     {
