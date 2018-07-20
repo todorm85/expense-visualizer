@@ -27,6 +27,7 @@ namespace ExpenseTracker.Core.Transactions
         {
             var newTransactions = this.parser.GetTransactions(fileStrem).ToList();
             var existingTransactions = this.transactionsRepo.Get();
+            // TODO: iterate the new not existing - existing could be potentially a lot
             foreach (var existingTransaction in existingTransactions)
             {
                 var duplicate = newTransactions.Find(t => this.CompareTransactions(t, existingTransaction));
