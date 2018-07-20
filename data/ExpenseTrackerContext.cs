@@ -10,7 +10,6 @@ namespace ExpenseTracker.Data
         { }
 
         public DbSet<Transaction> Transactions { get; set; }
-
         public DbSet<Tag> Tags { get; set; }
         public DbSet<KeyPhrase> KeyPhrases { get; set; }
 
